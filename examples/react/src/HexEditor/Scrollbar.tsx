@@ -1,32 +1,29 @@
 import { useEffect, useRef, useState } from "react";
-import { EventManager } from "../EventManager";
+import { EventManager } from "../utils/EventManager";
 
 interface ScrollbarProps {
     totalRows: number;
+    visibleRows: number;
     rowHeight: number;
-    scroll: (scrollIndex: number) => any;
+    onScroll: (scrollIndex: number) => unknown;
 }
 
-const Scrollbar = ({ totalRows, rowHeight, scroll }: ScrollbarProps) => {
+const Scrollbar = ({ totalRows, visibleRows, rowHeight, onScroll }: ScrollbarProps) => {
     const scrollTrack = useRef<HTMLDivElement>(null);
     const scrollThumb = useRef<HTMLDivElement>(null);
 
-    const [scrollIndex, setScrollIndex] = useState(0);
     const [scrolling, setScrolling] = useState(false);
-    const [thumbOffset, setThumbOffset] = useState(0);
 
+    const [thumbOffset, setThumbOffset] = useState(0);
     const [trackTop, setTrackTop] = useState(0);
-    const [trackHeight, setTrackHeight] = useState(0);
     const [thumbHeight, setThumbHeight] = useState(20);
 
+    const TRACK_HEIGHT = visibleRows * rowHeight;
+
     useEffect(() => {
-        const trackHeight = scrollTrack.current?.getBoundingClientRect().height!;
         setTrackTop(scrollTrack.current?.getBoundingClientRect().top!);
-        setTrackHeight(trackHeight);
-        setThumbHeight(
-            Math.max(20, Math.floor((trackHeight / (totalRows * rowHeight)) * trackHeight))
-        );
-    });
+        setThumbHeight(Math.max(20, Math.floor(TRACK_HEIGHT * (visibleRows / totalRows))));
+    }, []);
 
     const eventKey = Symbol();
 
@@ -37,17 +34,18 @@ const Scrollbar = ({ totalRows, rowHeight, scroll }: ScrollbarProps) => {
 
         EventManager.subscribe("mousemove", eventKey, (event: MouseEvent) => {
             const mousePosition = Math.min(
-                trackHeight - thumbHeight,
+                TRACK_HEIGHT - thumbHeight,
                 Math.max(0, event.pageY - trackTop - mouseThumbOffset)
             );
-            const scrollFraction = mousePosition / (trackHeight - thumbHeight);
-            const visibleRows = Math.floor(trackHeight / rowHeight);
+            const scrollFraction = mousePosition / (TRACK_HEIGHT - thumbHeight);
             const scrollIndex = Math.max(0, Math.floor((totalRows - visibleRows) * scrollFraction));
-            const quantizedScrollFraction = scrollIndex / totalRows;
-            const thumbOffset = quantizedScrollFraction * trackHeight;
+            const thumbOffset =
+                (scrollIndex / (totalRows - visibleRows)) * (TRACK_HEIGHT - thumbHeight);
+
             setThumbOffset(thumbOffset);
-            scroll(scrollIndex);
+            onScroll(scrollIndex);
         });
+
         EventManager.subscribe("mouseup", eventKey, () => {
             EventManager.unsubscribe("mousemove", eventKey);
             EventManager.unsubscribe("mouseup", eventKey);
@@ -64,19 +62,25 @@ const Scrollbar = ({ totalRows, rowHeight, scroll }: ScrollbarProps) => {
 
     return (
         <div
-            className={`h-auto w-[18px] border-l border-neutral-700 bg-neutral-800`}
+            className={`w-[18px] 
+			max-h-[${visibleRows * rowHeight}px]
+			border-l border-neutral-700 bg-neutral-800`}
             ref={scrollTrack}
         >
-            <div
-                className={`w-[calc(18px-1px)] border-none ${
-                    scrolling ? "bg-[rgb(140,140,140)]" : "bg-neutral-600 hover:bg-neutral-500"
-                }`.trim()}
-                ref={scrollThumb}
-                style={{ height: thumbHeight, marginTop: thumbOffset }}
-                onMouseDown={handleMouseDown}
-            >
-                &nbsp;
-            </div>
+            {visibleRows < totalRows ? (
+                <div
+                    className={`w-[calc(18px-1px)] border-none ${
+                        scrolling ? "bg-[rgb(140,140,140)]" : "bg-neutral-600 hover:bg-neutral-500"
+                    }`}
+                    ref={scrollThumb}
+                    style={{ height: thumbHeight, marginTop: thumbOffset }}
+                    onMouseDown={handleMouseDown}
+                >
+                    &nbsp;
+                </div>
+            ) : (
+                ""
+            )}
         </div>
     );
 };

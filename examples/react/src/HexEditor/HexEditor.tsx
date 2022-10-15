@@ -1,60 +1,58 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useElementSize } from "usehooks-ts";
+import { HexBuffer } from "../utils/hex";
+
 import HexGrid from "./HexGrid";
 import Scrollbar from "./Scrollbar";
 
 interface HexEditorProps {
     data: Uint8Array;
+    visibleRows: number;
 }
 
 const COLUMNS = 16;
 
-function HexEditor({ data }: HexEditorProps) {
+function HexEditor({ data, visibleRows }: HexEditorProps) {
+
     const [scrollIndex, setScrollIndex] = useState(0);
+    const [hexData] = useState(new HexBuffer(data));
+
     return (
-        <div className="flex flex-col w-min h-fit bg-[rgb(30,30,30)] ring-1 ring-neutral-700 font-mono cursor-default select-none">
+        <div
+            className="flex flex-col w-min h-full bg-[rgb(30,30,30)] ring-1 ring-neutral-700 font-mono cursor-default select-none"
+        >
             <div className="flex flex-row items-center border-b border-neutral-700">
-                <div className="flex flex-row items-center bg-neutral-500 h-4 ml-1 mr-[11px]">
-                    <span className="w-min">&nbsp;GOTO&nbsp;</span>
-                </div>
+                <div className="flex flex-row items-center h-4 ml-1 w-[52px] mr-[11px]"></div>
                 <ul className="flex flex-row justify-end space-x-[10px] mr-[6px] font-medium">
                     {Array(COLUMNS)
                         .fill(null)
                         .map((_, i) => (
-                            <li key={`${i}`}>
-                                {`0${i.toString(16)}`.slice(-2).toLocaleUpperCase()}
-                            </li>
+                            <li key={`${i}`}>{`0${i.toString(16)}`.slice(-2).toUpperCase()}</li>
                         ))}
                 </ul>
-                <div className="flex flex-row items-center justify-center hover:bg-neutral-500 w-4 h-4 mr-px text-white">
-                    <svg
-                        className="fill-neutral-300  cursor-pointer"
-                        viewBox="0 0 29.96 122.88"
-                        width={18}
-                        height={14}
-                    >
-                        <path
-                            d="M15,0A15,15,0,1,1,0,15,15,15,0,0,1,15,0Zm0,92.93a15,15,0,1,
-							1-15,15,15,15,0,0,1,15-15Zm0-46.47a15,15,0,1,1-15,15,15,15,0,0,1,15-15Z"
-                        />
-                    </svg>
-                </div>
             </div>
             <div className="flex flex-row h-auto">
                 <HexGrid
-                    {...{ data, columns: COLUMNS, scrollIndex, byteStates: new Uint8Array() }}
+                    {...{
+                        data: hexData,
+                        visibleRows,
+                        columns: COLUMNS,
+                        scrollIndex,
+                    }}
                 ></HexGrid>
                 <Scrollbar
                     {...{
                         totalRows: data.length / COLUMNS,
+                        visibleRows,
                         rowHeight: 21,
-                        scroll: (index) => {
+                        onScroll: (index) => {
                             setScrollIndex(index);
                         },
                     }}
                 ></Scrollbar>
             </div>
-            <div className="w-full  border-t bg-[rgb(30,30,30)] border-neutral-700">
-                {scrollIndex}
+            <div className="w-full border-t bg-[rgb(30,30,30)] border-neutral-700">
+                <code>ScrollIndex: {`00000${scrollIndex}`.slice(-5)};&nbsp;</code>
             </div>
         </div>
     );
