@@ -124,10 +124,9 @@ function setupHexGrid(
 
     for (let i = 0; i < visibleRows; i++) {
         const dataRow = document.createElement("ul");
-        dataRow.setAttribute("class", "flex flex-row space-x-[10px] mx-[6px]");
+        dataRow.setAttribute("class", "flex flex-row space-x-[10px] mx-[6px] h-[21px]");
         for (let j = 0; j < columns; j++) {
             const dataByte = document.createElement("li");
-            dataByte.setAttribute("class", "h-[21px]");
             dataByte.textContent = "XX";
             dataRow.appendChild(dataByte);
             dataBytes.push(dataByte);

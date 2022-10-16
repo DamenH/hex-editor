@@ -29,13 +29,13 @@ function HexGrid({ data, visibleRows, columns, scrollIndex }: HexGridProps) {
                     .fill(0)
                     .map((_, i) => (
                         <ul
-                            className="flex flex-row space-x-[10px] mx-[6px]"
+                            className="flex flex-row space-x-[10px] mx-[6px] h-[21px]"
                             key={`${i * columns}`}
                         >
                             {Array(columns)
                                 .fill(0)
                                 .map((_, j) => (
-                                    <li className="h-[21px]" key={`${i * columns + j}`}>
+                                    <li key={`${i * columns + j}`}>
                                         {`00${data.hex[scrollIndex * columns + i * columns + j]}`
                                             .slice(-2)
                                             .toUpperCase()}

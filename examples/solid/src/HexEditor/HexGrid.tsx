@@ -26,11 +26,11 @@ function HexGrid(props: HexGridProps) {
                 {Array(props.visibleRows)
                     .fill(0)
                     .map((_, i) => (
-                        <ul class="flex flex-row space-x-[10px] mx-[6px]">
+                        <ul class="flex flex-row space-x-[10px] mx-[6px] h-[21px]">
                             {Array(props.columns)
                                 .fill(0)
                                 .map((_, j) => (
-                                    <li class="h-[21px]">
+                                    <li>
                                         {`00${
                                             props.data.hex[
                                                 props.scrollIndex * props.columns +
