@@ -58,7 +58,7 @@ export async function setupHexEditor(
 
     for (let i = 0; i < COLUMNS; i++) {
         const columnIndex = document.createElement("li");
-        columnIndex.innerHTML = `0${i.toString(16)}`.slice(-2).toUpperCase();
+        columnIndex.textContent = `0${i.toString(16)}`.slice(-2).toUpperCase();
         columnIndices.appendChild(columnIndex);
     }
 
@@ -84,7 +84,7 @@ export async function setupHexEditor(
 
     const footerData = document.createElement("code");
     scrollIndex((scrollIndex) => {
-        footerData.innerHTML = `ScrollIndex: ${`00000${scrollIndex}`.slice(-5)};`;
+        footerData.textContent = `ScrollIndex: ${`00000${scrollIndex}`.slice(-5)};`;
     });
     footerParent.appendChild(footerData);
 
@@ -113,7 +113,7 @@ function setupHexGrid(
     for (let i = 0; i < visibleRows; i++) {
         const rowIndex = document.createElement("li");
         rowIndex.setAttribute("class", "h-[21px]");
-        rowIndex.innerHTML = `000000${toHex(columns + i * columns, 6)}`.slice(-6).toUpperCase();
+        rowIndex.textContent = `000000${toHex(columns + i * columns, 6)}`.slice(-6).toUpperCase();
 
         rowIndices.appendChild(rowIndex);
     }
@@ -128,7 +128,7 @@ function setupHexGrid(
         for (let j = 0; j < columns; j++) {
             const dataByte = document.createElement("li");
             dataByte.setAttribute("class", "h-[21px]");
-            dataByte.innerHTML = "XX";
+            dataByte.textContent = "XX";
             dataRow.appendChild(dataByte);
             dataBytes.push(dataByte);
         }
@@ -139,12 +139,13 @@ function setupHexGrid(
         dataBytes.forEach((dataByte, index) => {
             let i = index / columns;
             let j = index % columns;
-            dataByte.innerHTML = `00${data.hex[scrollIndex * columns + i * columns + j]}`
+
+            dataByte.textContent = `00${data.hex[scrollIndex * columns + i * columns + j]}`
                 .slice(-2)
                 .toUpperCase();
         });
         rowIndices.querySelectorAll("li").forEach((rowIndex, i) => {
-            rowIndex.innerHTML = `000000${toHex(scrollIndex * columns + i * columns, 6)}`
+            rowIndex.textContent = `000000${toHex(scrollIndex * columns + i * columns, 6)}`
                 .slice(-6)
                 .toUpperCase();
         });
