@@ -18,11 +18,11 @@ const Scrollbar = ({ totalRows, visibleRows, rowHeight, onScroll }: ScrollbarPro
     const [trackTop, setTrackTop] = useState(0);
     const [thumbHeight, setThumbHeight] = useState(20);
 
-    const TRACK_HEIGHT = visibleRows * rowHeight;
+    const CONTENT_HEIGHT = visibleRows * rowHeight;
 
     useEffect(() => {
         setTrackTop(scrollTrack.current?.getBoundingClientRect().top!);
-        setThumbHeight(Math.max(20, Math.floor(TRACK_HEIGHT * (visibleRows / totalRows))));
+        setThumbHeight(Math.max(20, Math.floor(CONTENT_HEIGHT * (visibleRows / totalRows))));
     }, []);
 
     const eventKey = Symbol();
@@ -34,13 +34,13 @@ const Scrollbar = ({ totalRows, visibleRows, rowHeight, onScroll }: ScrollbarPro
 
         EventManager.subscribe("mousemove", eventKey, (event: MouseEvent) => {
             const mousePosition = Math.min(
-                TRACK_HEIGHT - thumbHeight,
+                CONTENT_HEIGHT - thumbHeight,
                 Math.max(0, event.pageY - trackTop - mouseThumbOffset)
             );
-            const scrollFraction = mousePosition / (TRACK_HEIGHT - thumbHeight);
+            const scrollFraction = mousePosition / (CONTENT_HEIGHT - thumbHeight);
             const scrollIndex = Math.max(0, Math.floor((totalRows - visibleRows) * scrollFraction));
             const thumbOffset =
-                (scrollIndex / (totalRows - visibleRows)) * (TRACK_HEIGHT - thumbHeight);
+                (scrollIndex / (totalRows - visibleRows)) * (CONTENT_HEIGHT - thumbHeight);
 
             setThumbOffset(thumbOffset);
             onScroll(scrollIndex);

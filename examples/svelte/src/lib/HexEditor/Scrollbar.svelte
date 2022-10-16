@@ -17,11 +17,11 @@ let thumbOffset = 0;
 let trackTop = 0;
 let thumbHeight = 20;
 
-const TRACK_HEIGHT = visibleRows * rowHeight;
+const CONTENT_HEIGHT = visibleRows * rowHeight;
 
 onMount(() => {
     trackTop = scrollTrack.getBoundingClientRect().top!;
-    thumbHeight = Math.max(20, Math.floor(TRACK_HEIGHT * (visibleRows / totalRows)));
+    thumbHeight = Math.max(20, Math.floor(CONTENT_HEIGHT * (visibleRows / totalRows)));
 });
 
 const handleMouseDown = (event: MouseEvent) => {
@@ -33,12 +33,12 @@ const handleMouseDown = (event: MouseEvent) => {
 
     EventManager.subscribe("mousemove", eventKey, (event: MouseEvent) => {
         const mousePosition = Math.min(
-            TRACK_HEIGHT - thumbHeight,
+            CONTENT_HEIGHT - thumbHeight,
             Math.max(0, event.pageY - trackTop - mouseThumbOffset)
         );
-        const scrollFraction = mousePosition / (TRACK_HEIGHT - thumbHeight);
+        const scrollFraction = mousePosition / (CONTENT_HEIGHT - thumbHeight);
         scrollIndex = Math.max(0, Math.floor((totalRows - visibleRows) * scrollFraction));
-        thumbOffset = (scrollIndex / (totalRows - visibleRows)) * (TRACK_HEIGHT - thumbHeight);
+        thumbOffset = (scrollIndex / (totalRows - visibleRows)) * (CONTENT_HEIGHT - thumbHeight);
     });
 
     EventManager.subscribe("mouseup", eventKey, () => {

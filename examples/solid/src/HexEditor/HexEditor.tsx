@@ -1,6 +1,4 @@
-import { createEffect, createSignal, onCleanup, onMount } from "solid-js";
-import { EventManager } from "../utils/EventManager";
-// import { useElementSize } from "usehooks-ts";
+import { createSignal } from "solid-js";
 import { HexBuffer } from "../utils/hex";
 
 import HexGrid from "./HexGrid";
