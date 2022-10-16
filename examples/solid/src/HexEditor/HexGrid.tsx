@@ -10,7 +10,7 @@ interface HexGridProps {
 function HexGrid(props: HexGridProps) {
     return (
         <div class="flex flex-row w-full h-full bg-neutral-800">
-            <ul class="w-fit pl-1 pr-1 border-r border-neutral-700 bg-[rgb(30,30,30)]">
+            <ul class="w-fit pl-1 pr-1 border-r border-neutral-700 bg-[rgb(30,30,30)] text-blue-500">
                 {Array(props.visibleRows)
                     .fill("")
                     .map((_, i) =>
@@ -19,7 +19,7 @@ function HexGrid(props: HexGridProps) {
                             .toUpperCase()
                     )
                     .map((v, i) => (
-                        <li class="h-[21px] text-blue-500">{v}</li>
+                        <li class="h-[21px]">{v}</li>
                     ))}
             </ul>
             <div>

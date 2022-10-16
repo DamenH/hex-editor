@@ -10,7 +10,7 @@ interface HexGridProps {
 function HexGrid({ data, visibleRows, columns, scrollIndex }: HexGridProps) {
     return (
         <div className="flex flex-row w-full h-full bg-neutral-800">
-            <ul className="w-fit pl-1 pr-1 border-r border-neutral-700 bg-[rgb(30,30,30)]">
+            <ul className="w-fit pl-1 pr-1 border-r border-neutral-700 bg-[rgb(30,30,30)] text-blue-500">
                 {Array(visibleRows)
                     .fill("")
                     .map((_, i) =>
@@ -19,7 +19,7 @@ function HexGrid({ data, visibleRows, columns, scrollIndex }: HexGridProps) {
                             .toUpperCase()
                     )
                     .map((v, i) => (
-                        <li className="h-[21px] text-blue-500" key={`${i}`}>
+                        <li className="h-[21px]" key={`${i}`}>
                             {v}
                         </li>
                     ))}

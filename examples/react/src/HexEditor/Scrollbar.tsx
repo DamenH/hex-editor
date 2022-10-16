@@ -15,13 +15,12 @@ const Scrollbar = ({ totalRows, visibleRows, rowHeight, onScroll }: ScrollbarPro
     const [scrolling, setScrolling] = useState(false);
 
     const [thumbOffset, setThumbOffset] = useState(0);
-    const [trackTop, setTrackTop] = useState(0);
+    // const [trackTop, setTrackTop] = useState(0);
     const [thumbHeight, setThumbHeight] = useState(20);
 
     const CONTENT_HEIGHT = visibleRows * rowHeight;
 
     useEffect(() => {
-        setTrackTop(scrollTrack.current?.getBoundingClientRect().top!);
         setThumbHeight(Math.max(20, Math.floor(CONTENT_HEIGHT * (visibleRows / totalRows))));
     }, []);
 
@@ -29,6 +28,7 @@ const Scrollbar = ({ totalRows, visibleRows, rowHeight, onScroll }: ScrollbarPro
 
     const handleMouseDown = (event: React.MouseEvent<HTMLInputElement>) => {
         const mouseThumbOffset = event.pageY - scrollThumb.current?.getBoundingClientRect().top!;
+        const trackTop = scrollTrack.current?.getBoundingClientRect().top!;
 
         setScrolling(true);
 

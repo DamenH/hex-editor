@@ -8,13 +8,13 @@ export let scrollIndex: number;
 </script>
 
 <div class="flex flex-row w-full h-full bg-neutral-800">
-    <ul class="w-fit pl-1 pr-1 border-r border-neutral-700 bg-[rgb(30,30,30)]">
+    <ul class="w-fit pl-1 pr-1 border-r border-neutral-700 bg-[rgb(30,30,30)] text-blue-500">
         {#each Array(visibleRows)
             .fill("")
             .map((_, i) => `000000${toHex(scrollIndex * columns + i * columns, 6)}`
                     .slice(-6)
                     .toUpperCase()) as v}
-            <li class="h-[21px] text-blue-500">
+            <li class="h-[21px]">
                 {v}
             </li>
         {/each}

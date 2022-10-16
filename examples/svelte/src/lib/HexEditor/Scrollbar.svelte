@@ -14,18 +14,18 @@ let scrollThumb: HTMLDivElement;
 
 let scrolling = false;
 let thumbOffset = 0;
-let trackTop = 0;
 let thumbHeight = 20;
 
 const CONTENT_HEIGHT = visibleRows * rowHeight;
 
 onMount(() => {
-    trackTop = scrollTrack.getBoundingClientRect().top!;
+    
     thumbHeight = Math.max(20, Math.floor(CONTENT_HEIGHT * (visibleRows / totalRows)));
 });
 
 const handleMouseDown = (event: MouseEvent) => {
     const mouseThumbOffset = event.pageY - scrollThumb.getBoundingClientRect().top!;
+	const trackTop = scrollTrack.getBoundingClientRect().top!;
 
     scrolling = true;
 

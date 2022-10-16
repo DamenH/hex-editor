@@ -16,13 +16,11 @@ const Scrollbar = ({ totalRows, visibleRows, rowHeight, onScroll }: ScrollbarPro
     const [scrolling, setScrolling] = createSignal(false);
 
     const [thumbOffset, setThumbOffset] = createSignal(0);
-    const [trackTop, setTrackTop] = createSignal(0);
     const [thumbHeight, setThumbHeight] = createSignal(20);
 
     const CONTENT_HEIGHT = visibleRows * rowHeight;
 
     createEffect(() => {
-        setTrackTop(scrollTrack.getBoundingClientRect().top!);
         setThumbHeight(Math.max(20, Math.floor(CONTENT_HEIGHT * (visibleRows / totalRows))));
     }, []);
 
@@ -30,13 +28,14 @@ const Scrollbar = ({ totalRows, visibleRows, rowHeight, onScroll }: ScrollbarPro
 
     const handleMouseDown = (event: MouseEvent) => {
         const mouseThumbOffset = event.pageY - scrollThumb.getBoundingClientRect().top!;
+        const trackTop = scrollTrack.getBoundingClientRect().top!;
 
         setScrolling(true);
 
         EventManager.subscribe("mousemove", eventKey, (event: MouseEvent) => {
             const mousePosition = Math.min(
                 CONTENT_HEIGHT - thumbHeight(),
-                Math.max(0, event.pageY - trackTop() - mouseThumbOffset)
+                Math.max(0, event.pageY - trackTop - mouseThumbOffset)
             );
             const scrollFraction = mousePosition / (CONTENT_HEIGHT - thumbHeight());
             const scrollIndex = Math.max(0, Math.floor((totalRows - visibleRows) * scrollFraction));
