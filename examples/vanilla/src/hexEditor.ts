@@ -143,6 +143,7 @@ function setupHexGrid(
                 .slice(-2)
                 .toUpperCase();
         });
+
         rowIndices.querySelectorAll("li").forEach((rowIndex, i) => {
             rowIndex.textContent = `000000${toHex(scrollIndex * columns + i * columns, 6)}`
                 .slice(-6)
@@ -182,10 +183,7 @@ function setupScrollBar(
         scrollThumb.setAttribute("style", `height: ${thumbHeight}px; margin-top: ${0}px`);
 
         thumbOffset((thumbOffset) => {
-            scrollThumb.setAttribute(
-                "style",
-                `height: ${thumbHeight}px; margin-top: ${thumbOffset}px`
-            );
+            scrollThumb.style["marginTop"] = `${thumbOffset}px`;
         });
 
         scrolling((scrolling) => {
