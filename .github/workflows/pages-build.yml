@@ -64,9 +64,19 @@ jobs:
         run: |
             cp -a examples/vanilla/dist .
             mv dist vanilla
-      - name: Delete examples
+      - name: Delete
         working-directory: ./
         run: |
             rm -r examples
-            rm -r readme.md
+            rm -r .github
+            rm readme.md
+      - name: Commit
+        working-directory: ./
+        run: |
+            git config user.name github-actions
+            git config user.email github-actions@github.com
+            git --work-tree build add --all
+            git commit -m "Automatic Deploy action run by github-actions"
+            git push origin HEAD:pages-build --force
+            
             
