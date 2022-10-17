@@ -16,7 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          ref: pages-build
+          ref: master
       - name: Use Node.js 16
         uses: actions/setup-node@v3
         with:
