@@ -1,20 +1,20 @@
 import { EventManager } from "./utils/EventManager";
-import { HexBuffer, toHex } from "./utils/hex";
+import { toHex } from "./utils/hex";
 
 type Accessor<T> = (updater: (value: T) => void) => void;
 type Setter<T> = (value: T) => void;
 
 function createSignal<T>(initial: T): [Accessor<T>, Setter<T>] {
     let state = initial;
-    const subscribers = Array<(value: T) => void>();
+    const accessors = Array<(value: T) => void>();
 
     const get = (updater: (value: T) => void) => {
-        subscribers.push(updater);
+        accessors.push(updater);
     };
 
     const set = (value: T) => {
         state = value;
-        subscribers.forEach((updater) => {
+        accessors.forEach((updater) => {
             updater(state);
         });
     };
@@ -69,7 +69,7 @@ export async function setupHexEditor(
     mainParent.setAttribute("class", "flex flex-row h-auto w-full");
 
     const dataGrid = document.createElement("div");
-    setupHexGrid(dataGrid, new HexBuffer(data), visibleRows, COLUMNS, scrollIndex);
+    setupHexGrid(dataGrid, data, visibleRows, COLUMNS, scrollIndex);
 
     const scrollbar = document.createElement("div");
     setupScrollBar(scrollbar, data.length / COLUMNS, visibleRows, rowHeight, (i) => {
@@ -97,7 +97,7 @@ export async function setupHexEditor(
 
 function setupHexGrid(
     hexGrid: HTMLDivElement,
-    data: HexBuffer,
+    data: Uint8Array,
     visibleRows: number,
     columns: number,
     scrollIndex: Accessor<number>
@@ -120,7 +120,7 @@ function setupHexGrid(
 
     const dataParent = document.createElement("div");
 
-    const dataBytes = Array<HTMLLIElement>();
+    // const dataBytes = Array<HTMLLIElement>();
 
     for (let i = 0; i < visibleRows; i++) {
         const dataRow = document.createElement("ul");
@@ -129,19 +129,23 @@ function setupHexGrid(
             const dataByte = document.createElement("li");
             dataByte.textContent = "XX";
             dataRow.appendChild(dataByte);
-            dataBytes.push(dataByte);
+            // dataBytes.push(dataByte);
         }
         dataParent.appendChild(dataRow);
     }
 
     scrollIndex((scrollIndex) => {
-        dataBytes.forEach((dataByte, index) => {
-            let i = index / columns;
-            let j = index % columns;
+        // dataBytes.forEach((dataByte, index) => {
+        //     let i = index / columns;
+        //     let j = index % columns;
 
-            dataByte.textContent = `00${data.hex[scrollIndex * columns + i * columns + j]}`
-                .slice(-2)
-                .toUpperCase();
+        //     dataByte.textContent = toHex(data[scrollIndex * columns + i * columns + j], 2);
+        // });
+
+        dataParent.querySelectorAll("ul").forEach((dataRow, i) => {
+            dataRow.querySelectorAll("li").forEach((dataByte, j) => {
+                dataByte.textContent = toHex(data[scrollIndex * columns + i * columns + j], 2);
+            });
         });
 
         rowIndices.querySelectorAll("li").forEach((rowIndex, i) => {
