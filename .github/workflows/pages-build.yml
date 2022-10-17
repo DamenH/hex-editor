@@ -1,27 +1,29 @@
-name: Node.js CI
+name: Build Pages
 
 on:
   push:
-    branches: [ main ]
+    branches: [ master ]
   pull_request:
-    branches: [ main ]
+    branches: [ master ]
 
 jobs:
   build:
 
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [10.x, 12.x, 14.x, 15.x]
+
 
     steps:
       - uses: actions/checkout@v3
-      - name: Use Node.js ${{ matrix.node-version }}
+        with:
+          ref: pages-build
+      - name: Use Node.js 16
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 16
       - uses: peterjgrainger/action-create-branch@v2.2.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           branch: 'pages-build'
       - name: Build React
@@ -64,9 +66,20 @@ jobs:
         run: |
             cp -a examples/vanilla/dist .
             mv dist vanilla
-      - name: Delete examples
+      - name: Delete
         working-directory: ./
         run: |
             rm -r examples
-            rm -r readme.md
+            rm -r .github
+            rm readme.md
+            ls
+      - name: Commit
+        working-directory: ./
+        run: | 
+            git config user.name github-actions
+            git config user.email github-actions@github.com
+            git add .
+            git commit -m "Automatic Deploy action run by github-actions"
+            git push origin HEAD:pages-build --force
+            
             
