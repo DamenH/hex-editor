@@ -19,7 +19,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16
-          cache: 'npm'
       - uses: peterjgrainger/action-create-branch@v2.2.0
         with:
           branch: 'pages-build'
