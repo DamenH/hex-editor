@@ -75,12 +75,10 @@ jobs:
             ls
       - name: Commit
         working-directory: ./
-        run: |
-            git .
-            git config user.name github-actions
-            git config user.email github-actions@github.com
-            git --work-tree build add --all
-            git commit -m "Automatic Deploy action run by github-actions"
-            git push origin HEAD:pages-build --force
+      - run: git config user.name github-actions
+      - run: git config user.email github-actions@github.com
+      - run: git add .
+      - run: git commit -m "Automatic Deploy action run by github-actions"
+      - run: git push origin HEAD:pages-build --force
             
             
